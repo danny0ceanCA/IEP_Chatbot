@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IEP Chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <style>
+        .typing { font-style: italic; color: #666; }
+        .message { margin-bottom: 10px; padding: 5px 10px; border-radius: 6px; }
+        .user { text-align: right; background-color: #dceeff; }
+        .bot { text-align: left; background-color: #f0f0f0; }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="header">
+        <h2>Welcome, {{ user }}</h2>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="chat-box" id="chat-box">
+        <!-- Messages appear here -->
+    </div>
+
+    <form id="chat-form" class="chat-form">
+        <input type="text" id="user_input" name="user_input" placeholder="Ask your question..." required>
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById("chat-form");
+    const chatBox = document.getElementById("chat-box");
+    const inputField = document.getElementById("user_input");
+
+    form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const userMessage = inputField.value.trim();
+        if (!userMessage) return;
+
+        // Add user message to chat
+        const userDiv = document.createElement("div");
+        userDiv.className = "message user";
+        userDiv.innerHTML = `<strong>You:</strong> ${userMessage}`;
+        chatBox.appendChild(userDiv);
+
+        // Add bot typing placeholder
+        const botDiv = document.createElement("div");
+        botDiv.className = "message bot typing";
+        botDiv.innerHTML = "<strong>Bot:</strong> typing...";
+        chatBox.appendChild(botDiv);
+
+        chatBox.scrollTop = chatBox.scrollHeight;
+        inputField.value = "";
+
+        // Send request to server
+        const response = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({ user_input: userMessage })
+        });
+
+        const data = await response.json();
+        const botHTML = data.bot_response;
+
+        // Display formatted HTML with typing animation
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = botHTML;
+        const finalHTML = tempDiv.innerHTML;
+
+        let i = 0;
+        const typingSpeed = 5;
+        const interval = setInterval(() => {
+            botDiv.innerHTML = "<strong>Bot:</strong> " + finalHTML.substring(0, i);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            i++;
+            if (i >= finalHTML.length) {
+                clearInterval(interval);
+                botDiv.classList.remove("typing");
+            }
+        }, typingSpeed);
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+# Ignore virtual environment
+.venv/
+venv/
+
+# Ignore OS artifacts
+.DS_Store
+Thumbs.db
+
+# Ignore IDE/editor config folders
+.idea/
+*.iml
+
+# Ignore vendored packages (if you keep vendor/ here)
+vendor/
+
+# Ignore environment file
+.env
+
+# Ignore Python bytecode
+__pycache__/
+*.py[cod]

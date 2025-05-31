@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+jinja2
+python-dotenv
+openai
+redis
+itsdangerous
+python-multipart
+numpy
