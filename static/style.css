@@ -96,7 +96,9 @@ button:hover {
 .chat-box {
     display: flex;
     flex-direction: column;
-    height: 300px;
+    /* Allow the chat box to grow while ensuring a reasonable minimum */
+    min-height: 500px;
+    height: auto;
     overflow-y: auto;
     border: 1px solid #ddd;
     padding: 10px;
