@@ -1,3 +1,7 @@
+--no-index
+--find-links ./wheelhouse   # or an absolute path
+
+
 fastapi
 uvicorn
 jinja2
